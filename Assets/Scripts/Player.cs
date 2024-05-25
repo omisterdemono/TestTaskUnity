@@ -30,10 +30,6 @@ public class Player : MonoBehaviour
     void Update()
     {
         agent.velocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * agent.speed;
-        if (_currentHealth <= 0) 
-        {
-            SceneManager.LoadScene("MainScene");
-        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Enemy nearestEnemy = FindObjectsOfType<Enemy>().ToList()
@@ -52,5 +48,10 @@ public class Player : MonoBehaviour
         _currentHealth--;
         _healthFill.fillAmount = _currentHealth / _maxHealth;
         _healthText.text = $"{_currentHealth}/{_maxHealth}";
+
+        if (_currentHealth <= 0)
+        {
+            SceneManager.LoadScene("MainScene");
+        }
     }
 }
