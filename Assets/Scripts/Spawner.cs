@@ -16,14 +16,17 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
+        //Get reference on player
         _player = FindObjectOfType<Player>().transform;
     }
 
+    //Function that spawns enemies around the player
     public void Spawn()
     {
         Vector3 spawnPosition = GetRandomPositionNearPlayer(_player.position, minDistance, maxDistance);
         if (spawnPosition != Vector3.zero)
         {
+            //Saving enemies references to avoid them spawn on each other
             Enemies.Add(Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity));
         }
         else
@@ -32,19 +35,24 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    //Function that calculate position to spawn enemy for maxAttempts
     Vector3 GetRandomPositionNearPlayer(Vector3 playerPosition, float minDist, float maxDist)
     {
         for (int i = 0; i < maxAttempts; i++)
         {
-            Vector3 randomDirection = Random.insideUnitSphere * maxDist;
-            randomDirection += playerPosition;
+            Vector3 randomPosition = Random.insideUnitSphere * maxDist;
+            randomPosition += playerPosition;
 
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(randomDirection, out hit, maxDist, NavMesh.AllAreas))
+            //Find nearest position to spawn on NavMesh
+            if (NavMesh.SamplePosition(randomPosition, out hit, maxDist, NavMesh.AllAreas))
             {
+                //Get distance between player and random position
                 float distanceFromPlayer = Vector3.Distance(playerPosition, hit.position);
+                //Check if distance is between minDist and maxDist
                 if (distanceFromPlayer >= minDist && distanceFromPlayer <= maxDist)
                 {
+                    //Check for enemy collision
                     if (IsValidSpawnPosition(hit.position))
                     {
                         return hit.position;
@@ -55,6 +63,7 @@ public class Spawner : MonoBehaviour
         return Vector3.zero;
     }
 
+    //Function that check if position is allowed
     bool IsValidSpawnPosition(Vector3 position)
     {
         foreach (GameObject enemy in Enemies)

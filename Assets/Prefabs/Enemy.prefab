@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 4892577014394723238}
-  cooldown: {fileID: 968207286354862666}
+  cooldownComponent: {fileID: 968207286354862666}
   _shootCooldown: 0.5
   _projectilePrefab: {fileID: 6296679329523314223, guid: fa0920254faeb284e913a44cbdbf52bb, type: 3}
 --- !u!114 &968207286354862666

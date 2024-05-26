@@ -18,26 +18,28 @@ public class Player : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private Image _healthFill;
     [SerializeField] private TMP_Text _healthText;
+    private Spawner _spawner;
 
-    // Start is called before the first frame update
     void Start()
     {
         _currentHealth = _maxHealth;
         _healthFill.fillAmount = _currentHealth / _maxHealth;
+        _spawner = FindObjectOfType<Spawner>();
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //Adds velocity to the player based on input axis from WASD or arrow buttons
         agent.velocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")) * agent.speed;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Enemy nearestEnemy = FindObjectsOfType<Enemy>().ToList()
-                .OrderBy(e => Vector3.Distance(e.transform.position, transform.position))
-                .FirstOrDefault();
+            //Get nearest enemy
+            GameObject nearestEnemy = _spawner.Enemies.OrderBy(e => Vector3.Distance(e.transform.position, transform.position)).FirstOrDefault();
+            //If nearest enemy found, destroy it and update enemies in spawner
             if (nearestEnemy != null)
             {
-                FindObjectOfType<Spawner>().Enemies.Remove(nearestEnemy.gameObject);
+                _spawner.Enemies.Remove(nearestEnemy.gameObject);
                 Destroy(nearestEnemy.gameObject);
             }    
         }
